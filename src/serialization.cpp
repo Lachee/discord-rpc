@@ -102,8 +102,7 @@ size_t JsonWriteRichPresenceObj(char* dest,
             WriteKey(writer, "pid");
             writer.Int(pid);
 
-            if (presence != nullptr)
-            {
+            if (presence != nullptr) {
                 WriteObject activity(writer, "activity");
 
                 WriteOptionalString(writer, "state", presence->state);
@@ -189,6 +188,25 @@ size_t JsonWriteSubscribeCommand(char* dest, size_t maxLen, int nonce, const cha
 
         WriteKey(writer, "cmd");
         writer.String("SUBSCRIBE");
+
+        WriteKey(writer, "evt");
+        writer.String(evtName);
+    }
+
+    return writer.Size();
+}
+
+size_t JsonWriteUnsubscribeCommand(char* dest, size_t maxLen, int nonce, const char* evtName)
+{
+    JsonWriter writer(dest, maxLen);
+
+    {
+        WriteObject obj(writer);
+
+        JsonWriteNonce(writer, nonce);
+
+        WriteKey(writer, "cmd");
+        writer.String("UNSUBSCRIBE");
 
         WriteKey(writer, "evt");
         writer.String(evtName);
